@@ -35,14 +35,18 @@ a.clearstyle {
 .cover .code {
     display: inline-block;
     text-align: left;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0;
     font-family: monospace;
     border-top: solid 1px #fff;
     padding: 0.5rem;
-    overflow: auto;
     white-space: nowrap;
     font-size: 0.8rem;
+}
+.cover .codep {
+    overflow: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
 }
 a {
     border-bottom: dashed 1px #fff;
