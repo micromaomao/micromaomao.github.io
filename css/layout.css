@@ -70,3 +70,8 @@ h1 {
     margin: 1rem;
     padding: 0;
 }
+.nicknames {
+    padding: 1rem;
+    border-top: #ffb9b9 solid 0.5rem;
+    margin: 0;
+}
