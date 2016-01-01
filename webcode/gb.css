@@ -1,0 +1,139 @@
+html {
+    font-size: 16px;
+}
+body {
+    font-size: 1rem;
+    color: #424242;
+    font-family: serif;
+    background-color: #e9e9e9;
+}
+body.normal {
+    padding-left: 30rem;
+}
+h1, h2, h3, h4, b {
+    font-family: sans-serif;
+}
+h1 {
+    font-size: 2rem;
+    color: #ff9900;
+    font-weight: normal;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+h2 {
+    font-size: 1.5rem;
+    color: #ff9900;
+    font-weight: normal;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    margin: 0.5rem;
+}
+h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.5rem 1.5rem 0.5rem 1rem;
+    margin: 0.5rem;
+}
+h4 {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.5rem 1.5rem 0.5rem 1rem;
+    margin: 0.5rem;
+}
+p {
+    padding: 0.5rem 1.5rem 0.5rem 1rem;
+    margin: 0.5rem;
+}
+h1 a, h2 a {
+    color: inherit;
+    text-decoration: inherit;
+}
+*::selection {
+    color: inherit;
+    background-color: rgba(0, 150, 136, 0.2);
+}
+a {
+    color: inherit;
+    text-decoration: inherit;
+    transition: color 200ms;
+}
+a:hover {
+    text-decoration: underline;
+}
+body > *:hover a {
+    color: #042c62;
+}
+u {
+    text-decoration: none;
+    border-bottom: solid 1px rgba(34, 34, 34, 0.2);
+    transition: border-bottom-color 200ms, color 200ms;
+}
+u:hover {
+    border-bottom-color: rgba(34, 34, 34, 0.2) !important;
+    color: inherit !important;
+}
+body > *:hover u {
+    color: #3299bb;
+    border-bottom: solid 1px rgba(34, 34, 34, 1);
+}
+.hashhi {
+    background-color: rgba(255, 255, 0, 0.3);
+    transition: transform 300ms;
+}
+.metadata {
+    display: none;
+}
+body.normal .header {
+    position: fixed;
+    left: 0;
+    width: 29rem;
+    top: 0;
+    bottom: 0;
+    background-color: #153131;
+    box-shadow: 0 0 4rem #153131;
+    padding: 1rem 0 0 0;
+    color: #e08dac;
+    overflow: hidden;
+    z-index: 100;
+}
+body.normal .header h2, body.normal .header h3, body.normal .header h4 {
+    width: 100%;
+    color: inherit;
+    line-height: 1.1;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0.3rem;
+    font-weight: normal;
+    border-left: solid 0 #45cb85;
+}
+body.normal .header a {
+    color: inherit;
+    transition: opacity 200ms;
+}
+body.normal .header a:hover {
+    opacity: 0.8;
+    text-decoration: none;
+}
+.searchbox {
+    outline: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0 0.2rem 0 0.2rem;
+    margin: 0;
+    display: block;
+    font-weight: lighter;
+}
+body.normal .searchbox {
+    color: #fff;
+    width: 27rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+}
+body.small .searchbox {
+    color: inherit;
+    width: 100%;
+    background-color: transparent;
+    border-bottom: solid 1px rgba(87, 226, 229, 0.5);
+}
