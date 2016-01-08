@@ -170,6 +170,9 @@
                         this.url = docRoot + na.attr('href');
                         this.date = new Date(e.find('.date').text());
                         this.tags = [];
+                        // Nicknames for search
+                        this["in"] = this.tags
+                        this.title = this.name;
                         var th = this;
                         e.find('.tag').each(function(n, te) {
                             te = $(te);
@@ -324,7 +327,6 @@
                         return { token: tokens[p], attr: tokenAttrs[p] };
                     }
                     var TREE = {
-                        EXPR: 0,
                         TRUE: 2,
                         FALSE: 3,
                         HAVE: 5,        //
@@ -415,9 +417,59 @@
                     }
                     var tree = exprTree();
                     console.log(tree);
+                    function evaluate(tree, post) {
+                        if (tree.type == TREE.TRUE) {
+                            return true;
+                        } else if (tree.type == TREE.FALSE) {
+                            return false;
+                        } else if (tree.type == TREE.HAVE) {
+                            var finds = tree.right.split(',');
+                            var attr = tree.left;
+                            var src = post[attr].toString().toLowerCase();
+                            for(var i = 0; i < finds.length; i ++) {
+                                if (src.indexOf(finds[i].toLowerCase()) == -1)
+                                    return false;
+                            }
+                            return true;
+                        } else if (tree.type == TREE.LESSTHAN || tree.type == TREE.GREATERTHAN ||
+                                    tree.type == TREE.LESSOREQUAL || tree.type == TREE.GREATEROREQUAL) {
+                            var src = new Number(post[tree.left]);
+                            var rig = new Number(tree.right);
+                            if(isNaN(rig) || isNaN(src)) {
+                                rig = new Date(tree.right);
+                                src = new Date(post[tree.left]);
+                            }
+                            switch (tree.type) {
+                                case TREE.LESSTHAN:
+                                    return src < rig;
+                                case TREE.GREATERTHAN:
+                                    return src > rig;
+                                case TREE.LESSOREQUAL:
+                                    return src <= rig;
+                                case TREE.GREATEROREQUAL:
+                                    return src >= rig;
+                                default:
+                                    return false;
+                            }
+                        } else if (tree.type == TREE.EQUAL) {
+                            var src = post[tree.left];
+                            var rig = tree.right;
+                            if (src instanceof Date) {
+                                rig = new Date(rig);
+                            }
+                            return src == rig;
+                        } else if (tree.type == TREE.NOT) {
+                            return !evaluate(tree.right, post);
+                        } else if (tree.type == TREE.AND) {
+                            return evaluate(tree.left, post) && evaluate(tree.right, post);
+                        } else if (tree.type == TREE.OR) {
+                            return evaluate(tree.left, post) || evaluate(tree.right, post);
+                        } else if (tree.type == TREE.XOR) {
+                            return evaluate(tree.left, post) ^ evaluate(tree.right, post);
+                        }
+                    };
                     return function(post) {
-                        // TODO
-                        return true;
+                        return evaluate(tree, post);
                     };
                 }
                 var lastQuery = "";
@@ -441,7 +493,14 @@
                     var numRes = 0;
                     for( var i = 0; i < posts.length; i ++ ) {
                         var po = posts[i];
-                        var tq = qr(po);
+                        var tq;
+                        try {
+                            tq = qr(po);
+                        } catch (e) {
+                            sr.text(e.toString());
+                            console.error(e);
+                            return;
+                        }
                         if (!tq) continue;
                         var ptt = $('<a></a>');
                         ptt.text(po.name);
