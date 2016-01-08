@@ -179,6 +179,142 @@
                     posts.push(ptObj);
                 });
                 function praseQuery(queryStr) {
+                    var TOKEN = {
+                        EOF: 0,
+                        NAME: 1,
+                        STRING: 2,
+                        TRUE: 3,
+                        FALSE: 4,
+                        HAVE: 5,
+                        LESSTHAN: 6,
+                        GREATERTHAN: 7,
+                        EQUAL: 8,
+                        LB: 9, // (
+                        RB: 10, // )
+                        NOT: 11,
+                        AND: 12,
+                        OR: 13,
+                        XOR: 14
+                    };
+                    var tokens = [];
+                    var tokenAttrs = [];
+                    var pos = 0;
+                    function chars(args) {
+                        var a = arguments;
+                        var p = pos;
+                        for(var i = 0; i < a.length; i ++)
+                            p += a[i];
+                        return function(l) {
+                            return queryStr.substr(p, l);
+                        };
+                    }
+                    function char(args) {
+                        return chars.apply(null, arguments)(1);
+                    }
+                    while (pos < queryStr.length) {
+                        if(char().match(/^\s$/)) {
+                            pos++;
+                            continue;
+                        }
+                        if(chars()(4) == 'true') {
+                            pos += 4;
+                            tokens.push(TOKEN.TRUE);
+                            continue;
+                        }
+                        if(chars()(5) == 'false') {
+                            pos += 5;
+                            tokens.push(TOKEN.FALSE);
+                            continue;
+                        }
+                        if(char() == ':') {
+                            pos++;
+                            tokens.push(TOKEN.HAVE);
+                            continue;
+                        }
+                        if(char() == '<') {
+                            pos++;
+                            tokens.push(TOKEN.LESSTHAN);
+                            continue;
+                        }
+                        if(char() == '>') {
+                            pos++;
+                            tokens.push(TOKEN.GREATERTHAN);
+                            continue;
+                        }
+                        if(char() == '=') {
+                            pos++;
+                            tokens.push(TOKEN.EQUAL);
+                            if(char() == '=')
+                                pos++;
+                            continue;
+                        }
+                        if(char() == '(') {
+                            pos++;
+                            tokens.push(TOKEN.LB);
+                            continue;
+                        }
+                        if(char() == ')') {
+                            pos++;
+                            tokens.push(TOKEN.RB);
+                            continue;
+                        }
+                        if(char() == '!') {
+                            pos++;
+                            tokens.push(TOKEN.NOT);
+                            continue;
+                        }
+                        if(chars()(2) == '&&') {
+                            pos += 2;
+                            tokens.push(TOKEN.AND);
+                            continue;
+                        }
+                        if(chars()(2) == '||') {
+                            pos += 2;
+                            tokens.push(TOKEN.OR);
+                            continue;
+                        }
+                        if(char() == '^') {
+                            pos++;
+                            tokens.push(TOKEN.XOR);
+                            continue;
+                        }
+                        if(char() == '\'' || char() == '"') {
+                            pos++;
+                            var str = "";
+                            while (char() != '\'' && char() != '"' && pos < queryStr.length) {
+                                if (char() != '\\') {
+                                    str += char();
+                                    pos++;
+                                } else {
+                                    if(pos + 1 >= queryStr.length) {
+                                        str += '\\';
+                                        pos++;
+                                    } else {
+                                        str += char(1);
+                                        pos += 2;
+                                    }
+                                }
+                            }
+                            if (pos < queryStr.length)
+                                pos++;
+                            tokenAttrs[tokens.push(TOKEN.STRING) - 1] = str;
+                            continue;
+                        }
+                        var vaildNameChars = /^[a-zA-Z0-9,\-]$/;
+                        if(char().match(vaildNameChars)) {
+                            var str = char();
+                            pos++;
+                            while (char().match(vaildNameChars) && pos < queryStr.length) {
+                                str += char();
+                                pos++;
+                            }
+                            tokenAttrs[tokens.push(TOKEN.NAME) - 1] = str;
+                            continue;
+                        }
+                        throw "Syntax error: Unexpected character " + char();
+                    }
+                    tokens.push(TOKEN.EOF);
+                    console.log(tokens, tokenAttrs);
                     return function(post) {
                         // TODO
                         return true;
@@ -195,7 +331,13 @@
                         return;
                     var sr = $('<div class="searchresult"></div>');
                     ss.append(sr);
-                    var qr = praseQuery(query);
+                    try {
+                        var qr = praseQuery(query);
+                    } catch (e) {
+                        sr.text(e.toString());
+                        console.error(e);
+                        return;
+                    }
                     var numRes = 0;
                     for( var i = 0; i < posts.length; i ++ ) {
                         var po = posts[i];
