@@ -158,8 +158,9 @@
             bindAs(ml.find('a'));
             $.get(docRoot + 'posts.html', function(html) {
                 var ss = $('.searchh');
-                ss.html('<input type="text" class="searchbox" placeholder="(in:html && date&gt;2016-01-01) || title:blog,filter">');
+                ss.html('<input type="text" class="searchbox">');
                 var box = ss.find('input');
+                box.attr('placeholder', "title:filter && tags:blog");
                 var postlist = praseHtml(html).find('.postlist');
                 var posts = [];
                 postlist.find('li.post').each(function(n,e) {
