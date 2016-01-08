@@ -315,6 +315,106 @@
                     }
                     tokens.push(TOKEN.EOF);
                     console.log(tokens, tokenAttrs);
+                    pos = 0;
+                    function token(args) {
+                        var a = arguments;
+                        var p = pos;
+                        for(var i = 0; i < a.length; i ++)
+                            p += a[i];
+                        return { token: tokens[p], attr: tokenAttrs[p] };
+                    }
+                    var TREE = {
+                        EXPR: 0,
+                        TRUE: 2,
+                        FALSE: 3,
+                        HAVE: 5,        //
+                        LESSTHAN: 6,    // <---
+                        GREATERTHAN: 7, // The
+                        EQUAL: 8,       // same
+                        NOT: 11,        // as
+                        AND: 12,        // in
+                        OR: 13,         // TOKEN
+                        XOR: 14,        //
+                        LESSOREQUAL: 15,
+                        GREATEROREQUAL: 16
+                    };
+                    function ternTree() {
+                        if(token().token == TOKEN.TRUE) {
+                            pos++;
+                            return { type: TREE.TRUE };
+                        } else if (token().token == TOKEN.FALSE) {
+                            pos++;
+                            return { type: TREE.FALSE };
+                        } else if (token().token == TOKEN.NAME) {
+                            var left = token().attr;
+                            pos++;
+                            var op = token().token;
+                            pos++;
+                            if (op == TREE.HAVE || op == TREE.LESSTHAN || op == TREE.GREATERTHAN ||
+                                op == TREE.EQUAL) {
+                                if ((op == TREE.LESSTHAN || op == TREE.GREATERTHAN) && token().token == TOKEN.EQUAL) {
+                                    if(op == TREE.LESSTHAN)
+                                        op = TREE.LESSOREQUAL;
+                                    else
+                                        op == TREE.GREATEROREQUAL;
+                                    pos++;
+                                }
+                                if (token().token == TOKEN.NAME || token().token == TOKEN.STRING) {
+                                    var right = token().attr;
+                                    pos++;
+                                    return { type: op, left: left, right: right };
+                                } else {
+                                    throw "Syntax error: expected string.";
+                                }
+                            } else {
+                                throw "Syntax error: unexpected operator.";
+                            }
+                        }
+                    }
+                    function exprTree() {
+                        var left, op, right;
+                        function tt(l) {
+                            if(token().token == TOKEN.LB) {
+                                pos++;
+                                if(l)
+                                    left = exprTree();
+                                else
+                                    right = exprTree();
+                                if(token().token == TOKEN.RB) {
+                                    pos++;
+                                } else {
+                                    throw "Syntax error: expected ).";
+                                }
+                            } else if (token().token == TOKEN.NOT) {
+                                pos++;
+                                var tc = {
+                                    type: TREE.NOT,
+                                    right: exprTree()
+                                };
+                                if(l)
+                                    left = tc;
+                                else
+                                    right = tc;
+                            } else {
+                                if(l)
+                                    left = ternTree();
+                                else
+                                    right = exprTree();
+                            }
+                        }
+                        tt(true);
+                        if(token().token == TOKEN.AND || token().token == TOKEN.OR ||
+                            token().token == TOKEN.XOR) {
+                            op = token().token;
+                            pos++;
+                            tt(false);
+                            return { type: op, left: left, right: right };
+                        } else {
+                            return left;
+                        }
+                    }
+                    var tree = exprTree();
+                    console.log(tree);
                     return function(post) {
                         // TODO
                         return true;
