@@ -10,7 +10,7 @@ body {
 body.normal {
     padding-left: 30rem;
 }
-h1, h2, h3, h4, b {
+h1, h2, h3, h4, b, .postlist .post .name {
     font-family: sans-serif;
 }
 h1 {
@@ -92,7 +92,8 @@ body.normal .header {
     box-shadow: 0 0 4rem #153131;
     padding: 1rem 0 0 0;
     color: #e08dac;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     z-index: 100;
 }
 body.normal .header h2, body.normal .header h3, body.normal .header h4 {
@@ -136,4 +137,48 @@ body.small .searchbox {
     width: 100%;
     background-color: transparent;
     border-bottom: solid 1px rgba(87, 226, 229, 0.5);
+}
+
+.postlist {
+    list-style-type: none;
+    padding: 1rem;
+    margin: 1rem;
+}
+.postlist .post {
+    border-bottom: solid 0.1rem #aaa;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+.postlist .post .name {
+    display: block;
+    font-weight: bold;
+    font-size: 1.5rem;
+    border-left: solid 0.2rem rgb(87, 226, 229);
+    padding: 0 1rem 0 1rem;
+    transition: border-left-color 200ms;
+}
+.postlist .post .name:hover {
+    border-left-color: rgb(69, 203, 133);
+}
+.postlist .post .date {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+.postlist .post .tag {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    background-color: #ccc;
+    margin: 0.3rem;
+    padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+    display: inline-block;
+    border-radius: 0.4rem;
+}
+.searchh .searchresult a {
+    display: block;
+    padding: 0.1rem 0.5rem 0.1rem 0.5rem;
+}
+.searchh .searchresult {
+    max-height: 20rem;
+    overflow: auto;
+    width: 27rem;
 }
