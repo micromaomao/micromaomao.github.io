@@ -82,6 +82,16 @@ body > *:hover u {
 .metadata {
     display: none;
 }
+pre {
+    border-left: solid 0.2rem rgb(69, 203, 133);
+    margin-left: 2rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+code {
+    border-bottom: solid 0.1rem rgb(106, 127, 219);
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
 body.normal .header {
     position: fixed;
     left: 0;

@@ -183,6 +183,7 @@
                     posts.push(ptObj);
                 });
                 function praseQuery(queryStr) {
+                    // This function interpret the query and return a function for filter.
                     var TOKEN = {
                         EOF: 0,
                         NAME: 1,
@@ -215,6 +216,7 @@
                     function char(args) {
                         return chars.apply(null, arguments)(1);
                     }
+                    // Split query into tokens.
                     while (pos < queryStr.length) {
                         if(char().match(/^\s$/)) {
                             pos++;
@@ -342,6 +344,7 @@
                         GREATEROREQUAL: 16
                     };
                     function ternTree() {
+                        // Expect a tern, i.e. title:something or date<2016, false and true also count.
                         if(token().token == TOKEN.TRUE) {
                             pos++;
                             return { type: TREE.TRUE };
@@ -375,6 +378,7 @@
                         }
                     }
                     function exprTree() {
+                        // Expect a expr, i.e. tern && tern or ( tern ) || tern or ! tern.
                         var left, op, right;
                         function tt(l) {
                             if(token().token == TOKEN.LB) {
