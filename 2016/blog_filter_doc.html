@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>The filter language this blog use</title>
+        <meta name="description" content="Self-invented query language">
+        <meta name="author" content="Wtm mao <micromaomao@gmail.com>">
+        <link rel="stylesheet" href="../webcode/gb.css">
+        <script src="../webcode/gb.js" async></script>
+    </head>
+    <body>
+        <h1>The filter language this blog use</h1>
+        <p>You may already seen the search box on the left of this blog. In fact I think you got here because you
+            typed in <code>title:filter &amp;&amp; tags:blog</code>.</p>
+        <p>The language support logic operators and brackets. In order to search for this page, as well as the main page, you may use this:</p>
+        <pre>( title:filter &amp;&amp; tags:blog ) || url:'index.html'</pre>
+        <p>All spaces, except in <code>'strings'</code>, is optional. The above code could also been written as:</p>
+        <pre>(title:filter&amp;&amp;tags:blog)||url:'index.html'</pre>
+        <p>The interpreter excute the right operator first, so the code above can also been write as this to be shorter:</p>
+        <pre>url:'index.html'||title:filter&amp;&amp;tags:blog</pre>
+        <p>There are 4 basic logic operator in this language. <code>&amp;&amp;</code> is the AND operator, <code>||</code> is the
+            OR operator, <code>^</code> is the XOR operator and <code>!</code> is the NOT operator. For <code>&amp;&amp;</code>, <code>||</code>
+            and <code>^</code>, you put two expression, in the left and in the right and it will do things you expect. For <code>!</code>, you
+            put a expression in the right.</p>
+        <p>There are 6 test operators, they are <code>:</code>, <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>
+            and <code>&gt;=</code>. You use these operators in forms of <code>attr:string</code>, where <code>attr</code> is
+            the name of an attribute of one post, and <code>string</code> is the string you want to test.</p>
+        <p>For the <code>:</code> operator, it check whether the test string is in the attr.</p>
+        <p>This language support comparation of dates, for example <code>date &gt;= 2016-01-01</code> will give you all posts that is written after 2015.
+            It can be shorten as <code>date&gt;=2016-</code>.</p>
+        <p>If your string include only <code>/[a-zA-Z0-9,\-]/</code>, you can omit the <code>'</code>s. Otherwise you need to use <code>'</code>s to
+            cover it up.</p>
+        <p>For attr, you can use <code>title</code> ( <code>name</code> means the same thing ), <code>in</code> ( <code>tags</code> means the same
+            thing ) and <code>date</code>. ( By far )</p>
+    </body>
+</html>
