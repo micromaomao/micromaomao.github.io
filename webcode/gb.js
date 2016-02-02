@@ -527,7 +527,7 @@
     };
     pageload = function() {
         $('.viewsource').attr({
-            href: "https://github.com/micromaomao/micromaomao.github.io/blob/master" + location.pathname,
+            href: "https://github.com/micromaomao/micromaomao.github.io/blob/master" + (location.pathname === '/' ? '/index.html' : location.pathname),
             target: "_blank"
         });
         $('.metadata').remove();
